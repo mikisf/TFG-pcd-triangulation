@@ -113,3 +113,104 @@ if __name__ == "__main__":
     plt.colorbar(label="Value")
     plt.title("Marching Squares Contours")
     plt.show()
+
+"""
+if __name__ == "__main__":
+    # Test grid
+    #np.random.seed(0)
+    grid = np.random.rand(10, 10)
+    grid = np.random.randint(2, size=(2, 2))
+    for i2 in range(2):
+        for j2 in range(2):
+            for k2 in range(2):
+                for l2 in range(2):
+                    
+                    grid = np.array([[l2, i2], [k2, j2]])
+                    contours = marching_squares(grid, 0.5)
+
+                    # Plotting
+                    plt.figure(figsize=(10, 10))
+
+                    # Plot the grid
+                    for i in range(grid.shape[0]):
+                        plt.plot([0, grid.shape[1] - 1], [i, i], color='black', linestyle='--', linewidth=1, zorder=0)
+                        plt.plot([i, i], [0, grid.shape[0] - 1], color='black', linestyle='--', linewidth=1, zorder=0)
+
+                    # Plot the circles
+                    x, y = np.indices(grid.shape)
+                    
+                    # Check if grid values are all ones
+                    if np.all(grid == 1):
+                        # If grid values are uniform, use a fixed color (e.g., a light color like gray)
+                        plt.scatter(x.flatten(), y.flatten(), c='white', cmap='gray', s=25_000, edgecolor='black', linewidth=10, zorder=2)
+                    else:
+                        # Otherwise, use the colormap based on grid values
+                        plt.scatter(x.flatten(), y.flatten(), c=grid.flatten(), cmap='gray', s=25_000, edgecolor='black', linewidth=10, zorder=2)
+
+                    # Add the values inside the circles
+                    for i in range(grid.shape[0]):
+                        for j in range(grid.shape[1]):
+                            text_color = 'white' if grid[i, j] < 0.5 else 'black'
+                            plt.text(i, j - 0.01, f'{grid[i, j]}', ha='center', va='center', color=text_color, fontsize=100, fontweight='bold', zorder=3)
+
+                    # Plot the contours
+                    for (start, end) in contours:
+                        plt.plot([start[0], end[0]], [start[1], end[1]], 'b-', linewidth=20)
+
+                    #plt.colorbar(label="Value")
+                    #plt.title(f"Case {i2*8+j2*4+k2*2+l2} ({i2}{j2}{k2}{l2})", y=-0.1, fontsize=20, fontweight='bold')
+
+                    plt.xlim(-0.175, 1.175)  # Adjust based on your grid size
+                    plt.ylim(-0.175, 1.175)  # Adjust based on your grid size
+                    plt.axis('off')
+                    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)  # Remove margins around the plot
+
+                    plt.savefig(f"C:/Users/OctocamMaps/Desktop/MarchingSquares/MSCase{i2*8+j2*4+k2*2+l2}.png")
+                    plt.close()
+                    
+                    #plt.show()
+"""
+
+"""
+if __name__ == "__main__":
+    # Test grid
+    np.random.seed(0)
+    grid = np.random.rand(10, 10)
+    grid = np.random.randint(2, size=(5, 5))
+    contours = marching_squares(grid, 0.5)
+
+    # Plotting
+    plt.figure(figsize=(10, 10))
+
+    # Plot the grid
+    for i in range(grid.shape[0]):
+        plt.plot([0, grid.shape[1] - 1], [i, i], color='black', linestyle='--', linewidth=1, zorder=0)
+        plt.plot([i, i], [0, grid.shape[0] - 1], color='black', linestyle='--', linewidth=1, zorder=0)
+
+    # Plot the circles
+    x, y = np.indices(grid.shape)
+    plt.scatter(x.flatten(), y.flatten(), c=grid.flatten(), cmap='gray', s=2000, edgecolor='black', linewidth=5, zorder=2)
+
+    # Add the values inside the circles
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            text_color = 'white' if grid[i, j] < 0.5 else 'black'
+            plt.text(i - 0.0005, j - 0.015, f'{grid[i, j]}', ha='center', va='center', color=text_color, fontsize=30, fontweight='bold', zorder=3)
+
+    # Plot the contours
+    for (start, end) in contours:
+        plt.plot([start[0], end[0]], [start[1], end[1]], 'b-', linewidth=10)
+
+    #plt.colorbar(label="Value")
+    #plt.title("Marching Squares Contours")
+
+    plt.xlim(-0.3, 4.3)  # Adjust based on your grid size
+    plt.ylim(-0.25, 4.25)  # Adjust based on your grid size
+    plt.axis('off')
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)  # Remove margins around the plot
+    
+    plt.savefig(f"C:/Users/OctocamMaps/Desktop/MarchingSquares/Global.png")
+    plt.close()
+
+    #plt.show()
+"""
