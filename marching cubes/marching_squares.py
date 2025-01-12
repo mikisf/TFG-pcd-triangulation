@@ -20,10 +20,10 @@ MARCHING_SQUARES_LUT = {
     15: []
 }
 
-def interpolate(p1, p2, v1, v2, threshold):
-    """Linear interpolation between two points p1 and p2 based on values v1 and v2."""
-    t = (threshold - v1) / (v2 - v1)
-    return p1 + t * (p2 - p1)
+def interpolate(p2, p1, v2, v1, threshold):
+    """Linear interpolation between two points p2 and p1 based on values v2 and v1."""
+    t = (threshold - v2) / (v1 - v2)
+    return p2 + t * (p1 - p2)
 
 def marching_squares(grid, threshold):
     """Apply Marching Squares algorithm to a 2D grid."""
@@ -37,18 +37,18 @@ def marching_squares(grid, threshold):
             y
             ^
             
-            3 -- [2] -- 2
+            0 -- [0] -- 1
             |           |
            [3]         [1]
             |           |
-            0 -- [0] -- 1    > x
+            3 -- [2] -- 2    > x
             
             """
 
-            p0 = np.array([x, y])
-            p1 = np.array([x + 1, y])
-            p2 = np.array([x + 1, y + 1])
-            p3 = np.array([x, y + 1])
+            p0 = np.array([x, y + 1])
+            p1 = np.array([x + 1, y + 1])
+            p2 = np.array([x + 1, y])
+            p3 = np.array([x, y])
 
             v0 = grid[p0[0], p0[1]]
             v1 = grid[p1[0], p1[1]]
@@ -60,7 +60,7 @@ def marching_squares(grid, threshold):
             if v1 < threshold: square_index |= 2
             if v2 < threshold: square_index |= 4
             if v3 < threshold: square_index |= 8
-
+            
             edges = MARCHING_SQUARES_LUT[square_index]
 
             for (start_edge, end_edge) in edges:
@@ -86,6 +86,12 @@ if __name__ == "__main__":
     np.random.seed(0)
     grid = np.random.rand(10, 10)
     grid = np.random.randint(2, size=(10, 10))
+
+    np.random.seed(4)
+    grid = np.random.rand(5, 5)
+    grid[3, 0] = 0.65
+    grid[4, 0] = 0.3
+    
     contours = marching_squares(grid, 0.5)
 
     # Plotting
@@ -125,7 +131,7 @@ if __name__ == "__main__":
             for k2 in range(2):
                 for l2 in range(2):
                     
-                    grid = np.array([[l2, i2], [k2, j2]])
+                    grid = np.array([[i2, l2], [j2, k2]])
                     contours = marching_squares(grid, 0.5)
 
                     # Plotting
@@ -174,9 +180,11 @@ if __name__ == "__main__":
 """
 if __name__ == "__main__":
     # Test grid
-    np.random.seed(0)
-    grid = np.random.rand(10, 10)
-    grid = np.random.randint(2, size=(5, 5))
+    np.random.seed(4)
+    grid = np.random.rand(5, 5)
+    grid[3, 0] = 0.65
+    grid[4, 0] = 0.3
+    #grid = np.random.randint(2, size=(5, 5))
     contours = marching_squares(grid, 0.5)
 
     # Plotting
@@ -195,7 +203,7 @@ if __name__ == "__main__":
     for i in range(grid.shape[0]):
         for j in range(grid.shape[1]):
             text_color = 'white' if grid[i, j] < 0.5 else 'black'
-            plt.text(i - 0.0005, j - 0.015, f'{grid[i, j]}', ha='center', va='center', color=text_color, fontsize=30, fontweight='bold', zorder=3)
+            plt.text(i - 0.0005, j - 0.01, f'{grid[i, j]:0.2f}', ha='center', va='center', color=text_color, fontsize=15, fontweight='bold', zorder=3)
 
     # Plot the contours
     for (start, end) in contours:
