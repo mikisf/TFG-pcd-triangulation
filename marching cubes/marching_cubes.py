@@ -12,8 +12,8 @@ def interpolate_vertex(threshold, p1, p2, valp1, valp2):
         return p2
     if abs(valp1 - valp2) < 0.00001:
         return p1
-    mu = (threshold - valp1) / (valp2 - valp1)
-    return p1 + mu * (p2 - p1)
+    t = (threshold - valp1) / (valp2 - valp1)
+    return p1 + t * (p2 - p1)
 
 def marching_cubes(grid, threshold):
     vertices = []
@@ -29,31 +29,31 @@ def marching_cubes(grid, threshold):
                 z
                 ^
                 
-                4---------[7]--------7
+                4---------[4]--------5
                /|                   /|
-            [4] |                [6] |
+            [7] |                [5] |
             /   |                /   |
-           5---------[5]--------6    |
+           7---------[6]--------6    |
            |    |               |    |
-           |   [8]              |  [11]
+           |   [8]              |   [9]
            |    |               |    |
-           |    0---------[3]---|----3  > y
-          [9]  /              [10]  /
-           | [0]                | [2]
+           |    0---------[0]---|----1  > y
+          [11]  /             [10]  /
+           | [3]                | [1]
            | /                  | /
-           1---------[1]--------2
+           3---------[2]--------2
 
-         x   
+         x
                 """
 
                 p0 = np.array([x, y, z])
-                p1 = np.array([x + 1, y, z])
+                p1 = np.array([x, y + 1, z])
                 p2 = np.array([x + 1, y + 1, z])
-                p3 = np.array([x, y + 1, z])
+                p3 = np.array([x + 1, y, z])
                 p4 = np.array([x, y, z + 1])
-                p5 = np.array([x + 1, y, z + 1])
+                p5 = np.array([x, y + 1, z + 1])
                 p6 = np.array([x + 1, y + 1, z + 1])
-                p7 = np.array([x, y + 1, z + 1])
+                p7 = np.array([x + 1, y, z + 1])
 
                 v0 = grid[p0[0]][p0[1]][p0[2]]
                 v1 = grid[p1[0]][p1[1]][p1[2]]
@@ -94,13 +94,14 @@ def marching_cubes(grid, threshold):
                 for i in range(0, 16, 3):
                     if triTable[cube_index][i] == -1:
                         break
-                    v1 = vertlist[triTable[cube_index][i]]
+                    v3 = vertlist[triTable[cube_index][i]]
                     v2 = vertlist[triTable[cube_index][i + 1]]
-                    v3 = vertlist[triTable[cube_index][i + 2]]
-                    vertices.extend([v1, v2, v3])
+                    v1 = vertlist[triTable[cube_index][i + 2]]
+                    vertices.extend([v3, v2, v1])
                     faces.append([len(vertices) - 3, len(vertices) - 2, len(vertices) - 1])
 
     return np.array(vertices), np.array(faces)
+
 
 if __name__ == "__main__":
     #np.random.seed(0)
@@ -140,8 +141,8 @@ if __name__ == "__main__":
         for j in range(grid.shape[1] - 1):
             for k in range(grid.shape[2] - 1):
                 cube_edges = [
-                    [(i + v1[0], j + v1[1], k + v1[2]), (i + v2[0], j + v2[1], k + v2[2])]
-                    for v1, v2 in cube_edges_template
+                    [(i + v3[0], j + v3[1], k + v3[2]), (i + v2[0], j + v2[1], k + v2[2])]
+                    for v3, v2 in cube_edges_template
                 ]
                 for edge in cube_edges:
                     edge_x, edge_y, edge_z = zip(*edge)
@@ -155,3 +156,4 @@ if __name__ == "__main__":
 
     # Create the .obj file
     create_obj(vertices, faces, "output_with_normals.obj")
+
