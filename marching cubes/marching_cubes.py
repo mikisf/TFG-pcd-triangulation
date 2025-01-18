@@ -157,3 +157,188 @@ if __name__ == "__main__":
     # Create the .obj file
     create_obj(vertices, faces, "output_with_normals.obj")
 
+"""
+if __name__ == "__main__":
+    #np.random.seed(0)
+    grid = np.random.rand(2, 2, 2)
+    grid = np.random.randint(2, size=(2, 2, 2))
+
+    grid1 = 1 - np.array([[[0, 0], [0, 0]], [[0, 0], [0, 0]]])
+    grid2 = 1 - np.array([[[0, 0], [0, 0]], [[1, 0], [0, 0]]])
+    grid3 = 1 - np.array([[[0, 0], [0, 0]], [[1, 0], [1, 0]]])
+    grid4 = 1 - np.array([[[0, 0], [0, 0]], [[1, 0], [0, 1]]])
+    grid5 = 1 - np.array([[[1, 0], [1, 0]], [[0, 0], [1, 0]]])
+    grid6 = 1 - np.array([[[1, 0], [1, 0]], [[1, 0], [1, 0]]])
+    grid7 = 1 - np.array([[[1, 0], [1, 0]], [[0, 1], [1, 0]]])
+    grid8 = 1 - np.array([[[0, 1], [1, 0]], [[1, 0], [0, 1]]])
+    grid9 = 1 - np.array([[[1, 1], [1, 0]], [[1, 0], [0, 0]]])
+    grid10 = 1 - np.array([[[1, 1], [1, 0]], [[0, 0], [1, 0]]])
+    grid11 = 1 - np.array([[[0, 0], [0, 1]], [[1, 0], [0, 0]]])
+    grid12 = 1 - np.array([[[0, 0], [0, 1]], [[1, 0], [1, 0]]])
+    grid13 = 1 - np.array([[[0, 0], [0, 1]], [[0, 1], [1, 0]]])
+    grid14 = 1 - np.array([[[0, 0], [1, 1]], [[1, 1], [0, 0]]])
+    grid15 = 1 - np.array([[[1, 0], [1, 1]], [[1, 0], [0, 0]]])
+
+    grids = [grid1, grid2, grid3, grid4, grid5, grid6, grid7, grid8, grid9, grid10, grid11, grid12, grid13, grid14, grid15]
+    #grids = [grid10]
+    grids = [1 - np.array([[[0, 0], [0, 0]], [[0, 1], [0, 0]]])]
+    grids = [grid15]
+
+    for index, grid in enumerate(grids):
+
+        threshold = 0.5
+        vertices, faces = marching_cubes(grid, threshold)
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        # Plot the points
+        x, y, z = np.where(grid < threshold)
+        ax.scatter(x, y, z, c='w', s=999, marker='o', edgecolors='k', alpha=1)
+
+        for (i, j, k) in zip(x, y, z):
+            text = ''
+            if i == 0 and j == 0 and k == 0: text = 'e0'
+            if i == 1 and j == 0 and k == 0: text = 'e3'
+            if i == 1 and j == 1 and k == 0: text = 'e2'
+            if i == 0 and j == 1 and k == 0: text = 'e1'
+            if i == 0 and j == 0 and k == 1: text = 'e4'
+            if i == 1 and j == 0 and k == 1: text = 'e7'
+            if i == 1 and j == 1 and k == 1: text = 'e6'
+            if i == 0 and j == 1 and k == 1: text = 'e5'
+
+            ax.text(i, j, k, text, color='black', ha='center', va='center', fontsize=20, zorder=100)
+            #ax.plot([i], [j], [k], marker='o', markersize=31.5, color='w', markeredgecolor='k', alpha=1, zorder=2)
+        
+        ax.text(0.5, 1+0.1, 0, 'a1', color='black', ha='center', va='center', fontsize=20, zorder=100)
+        ax.text(1+0.1, 0.5, 0-0.05, 'a2', color='black', ha='center', va='center', fontsize=20, zorder=100)
+        ax.text(0.5, 1 + 0.1, 1 - 0.05, 'a5', color='black', ha='center', va='center', fontsize=20, zorder=100)
+        ax.text(0-0.05, 0.5, 1+0.05, 'a4', color='black', ha='center', va='center', fontsize=20, zorder=100)
+        ax.text(1+0.07, 0-0.07, 0.5, 'a11', color='black', ha='center', va='center', fontsize=20, zorder=100)
+        ax.text(0 + 0.15, 0, 0.5+0.1, 'a8', color='black', ha='center', va='center', fontsize=20, zorder=100)
+
+        # Plot the triangles
+        for face in faces:
+            triangle = vertices[face]
+            tri = Poly3DCollection([triangle], alpha=0.5, edgecolor='k', zorder=200)
+            tri.set_facecolor((0, 0, 1, 0.5))
+            ax.add_collection3d(tri)
+        
+        # Plot the edges of the cubes
+        cube_edges_template = [
+            [(0, 0, 0), (1, 0, 0)], [(1, 0, 0), (1, 1, 0)], [(1, 1, 0), (0, 1, 0)], [(0, 1, 0), (0, 0, 0)],  # Bottom face
+            [(0, 0, 1), (1, 0, 1)], [(1, 0, 1), (1, 1, 1)], [(1, 1, 1), (0, 1, 1)], [(0, 1, 1), (0, 0, 1)],  # Top face
+            [(0, 0, 0), (0, 0, 1)], [(1, 0, 0), (1, 0, 1)], [(1, 1, 0), (1, 1, 1)], [(0, 1, 0), (0, 1, 1)]   # Vertical edges
+        ]
+        for i in range(grid.shape[0] - 1):
+            for j in range(grid.shape[1] - 1):
+                for k in range(grid.shape[2] - 1):
+                    cube_edges = [
+                        [(i + v3[0], j + v3[1], k + v3[2]), (i + v2[0], j + v2[1], k + v2[2])]
+                        for v3, v2 in cube_edges_template
+                    ]
+                    for edge in cube_edges:
+                        edge_x, edge_y, edge_z = zip(*edge)
+                        ax.plot(edge_x, edge_y, edge_z, color='black', linewidth=1, zorder=1)
+
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+
+        # Set the camera position
+        ax.view_init(elev=20, azim=35)
+        plt.axis('off')
+        plt.xlim(-0., 1.)
+        plt.ylim(-0., 1.)
+        ax.set_zlim(-0., 1.)
+        plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+
+        plt.savefig(f"C:/Users/\Miquel/Desktop/MC/Example2.png")
+        plt.close()
+
+        #plt.show()
+"""
+"""
+if __name__ == "__main__":
+    #np.random.seed(0)
+    grid = np.random.rand(2, 2, 2)
+    grid = np.random.randint(2, size=(2, 2, 2))
+    grid = np.array([[[0, 0], [0, 0]], [[0, 0], [0, 0]]])
+
+    threshold = 0.5
+    vertices, faces = marching_cubes(grid, threshold)
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot the points
+    x, y, z = np.where(grid < threshold)
+    ax.scatter(x, y, z, c='w', s=999, marker='o', edgecolors='k', alpha=1, zorder=10)
+
+    for (i, j, k) in zip(x, y, z):
+        text = ''
+        if i == 0 and j == 0 and k == 0: text = 'e3'
+        if i == 1 and j == 0 and k == 0: text = 'e2'
+        if i == 1 and j == 1 and k == 0: text = 'e1'
+        if i == 0 and j == 1 and k == 0: text = 'e0'
+        if i == 0 and j == 0 and k == 1: text = 'e7'
+        if i == 1 and j == 0 and k == 1: text = 'e6'
+        if i == 1 and j == 1 and k == 1: text = 'e5'
+        if i == 0 and j == 1 and k == 1: text = 'e4'
+
+        ax.text(i, j, k, text, color='black', ha='center', va='center', fontsize=20, zorder=100)
+
+    ax.text(0.5, 1+0.05, 0+0.05, 'a0', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(1+0.05, 0.5, 0-0.05, 'a1', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(0.5, 0-0.06, 0-0.05, 'a2', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(0-0.05, 0.5, 0+0.05, 'a3', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(0.5, 1+0.05, 1+0.05, 'a4', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(1, 0.5-0.05, 1-0.1, 'a5', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(0.5-0.05, 0, 1-0.1, 'a6', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(0-0.05, 0.5, 1+0.05, 'a7', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(0+0.1, 1, 0.5+0.1, 'a8', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(1+0.05, 1+0.05, 0.5, 'a9', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(1-0.07, 0-0.07, 0.5-0.05, 'a10', color='black', ha='center', va='center', fontsize=20, zorder=100)
+    ax.text(0-0.07, 0-0.07, 0.5, 'a11', color='black', ha='center', va='center', fontsize=20, zorder=100)
+
+    # Plot the triangles
+    for face in faces:
+        triangle = vertices[face]
+        tri = Poly3DCollection([triangle], alpha=0.5, edgecolor='k')
+        tri.set_facecolor((0, 0, 1, 0.5))
+        ax.add_collection3d(tri)
+
+    # Plot the edges of the cubes
+    cube_edges_template = [
+        [(0, 0, 0), (1, 0, 0)], [(1, 0, 0), (1, 1, 0)], [(1, 1, 0), (0, 1, 0)], [(0, 1, 0), (0, 0, 0)],  # Bottom face
+        [(0, 0, 1), (1, 0, 1)], [(1, 0, 1), (1, 1, 1)], [(1, 1, 1), (0, 1, 1)], [(0, 1, 1), (0, 0, 1)],  # Top face
+        [(0, 0, 0), (0, 0, 1)], [(1, 0, 0), (1, 0, 1)], [(1, 1, 0), (1, 1, 1)], [(0, 1, 0), (0, 1, 1)]   # Vertical edges
+    ]
+    for i in range(grid.shape[0] - 1):
+        for j in range(grid.shape[1] - 1):
+            for k in range(grid.shape[2] - 1):
+                cube_edges = [
+                    [(i + v3[0], j + v3[1], k + v3[2]), (i + v2[0], j + v2[1], k + v2[2])]
+                    for v3, v2 in cube_edges_template
+                ]
+                for edge in cube_edges:
+                    edge_x, edge_y, edge_z = zip(*edge)
+                    ax.plot(edge_x, edge_y, edge_z, color='black', linewidth=1)
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
+    # Set the camera position
+    ax.view_init(elev=20, azim=-55)
+    plt.axis('off')
+    plt.xlim(-0., 1.)
+    plt.ylim(-0., 1.)
+    ax.set_zlim(-0., 1.)
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+
+    plt.savefig(f"C:/Users/Miquel/Desktop/MC/As.png")
+    plt.close()
+
+    #plt.show()
+"""
