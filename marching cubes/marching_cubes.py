@@ -97,7 +97,7 @@ def marching_cubes(grid, threshold):
                     v3 = vertlist[triTable[cube_index][i]]
                     v2 = vertlist[triTable[cube_index][i + 1]]
                     v1 = vertlist[triTable[cube_index][i + 2]]
-                    vertices.extend([v3, v2, v1])
+                    vertices.extend([v1, v2, v3])
                     faces.append([len(vertices) - 3, len(vertices) - 2, len(vertices) - 1])
 
     return np.array(vertices), np.array(faces)

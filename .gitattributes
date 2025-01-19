@@ -1,4 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-MRbrain[[:space:]]020.obj filter=lfs diff=lfs merge=lfs -text
-output.obj filter=lfs diff=lfs merge=lfs -text
+marching[[:space:]]cubes/data/Bunny050.obj filter=lfs diff=lfs merge=lfs -text
+marching[[:space:]]cubes/data/MRbrain020.obj filter=lfs diff=lfs merge=lfs -text

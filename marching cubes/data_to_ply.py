@@ -71,6 +71,6 @@ if __name__ == "__main__":
     aspect_matrix = np.diag(aspect_ratio)
     vertices = vertices @ aspect_matrix
 
-    create_obj(vertices, faces, "output.obj")
+    create_obj(vertices, faces, "marching cubes/data/Bunny050.obj")
     
     
