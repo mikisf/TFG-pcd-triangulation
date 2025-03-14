@@ -3,7 +3,7 @@ from edgeTable import edgeTable
 from triTable import triTable
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-from create_obj import create_obj
+from utils.create_obj import create_obj
 
 def interpolate_vertex(threshold, p1, p2, valp1, valp2):
     if abs(threshold - valp1) < 0.00001:
@@ -21,7 +21,6 @@ def marching_cubes(grid, threshold):
     nx, ny, nz = grid.shape
 
     for x in range(nx - 1):
-        print(x)
         for y in range(ny - 1):
             for z in range(nz - 1):
 
@@ -106,17 +105,11 @@ def marching_cubes(grid, threshold):
 if __name__ == "__main__":
     #np.random.seed(0)
     grid = np.random.rand(2, 2, 2)
-    grid = np.random.randint(2, size=(10, 10, 10))
+    grid = np.random.randint(2, size=(3, 3, 3))
 
-    x, y, z = np.indices((30, 30, 30))
-    sphere = (x - 15)**2 + (y - 15)**2 + (z - 15)**2
-    grid = sphere / 675
-    print(grid)
-
-    threshold = 0.2
+    threshold = 0.5
     vertices, faces = marching_cubes(grid, threshold)
 
-    """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -152,10 +145,9 @@ if __name__ == "__main__":
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
     plt.show()
-    """
 
     # Create the .obj file
-    create_obj(vertices, faces, "output_with_normals.obj")
+    #create_obj(vertices, faces, "output_with_normals.obj")
 
 """
 if __name__ == "__main__":
