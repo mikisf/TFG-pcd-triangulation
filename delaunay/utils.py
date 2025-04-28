@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import math
 
 def circumcircle(p1, p2, p3):
     """
@@ -53,3 +54,13 @@ def plot_triangulation(points, triangles, title="Delaunay Triangulation"):
     plt.ylabel("Y")
     plt.gca().set_aspect('equal', adjustable='box')
     plt.show()
+
+def angle(A, B, C):
+    BA = (A[0] - B[0], A[1] - B[1])
+    BC = (C[0] - B[0], C[1] - B[1])
+    dot_product = BA[0] * BC[0] + BA[1] * BC[1]
+    cross_product = BA[0] * BC[1] - BA[1] * BC[0]
+    angle_rad = math.atan2(cross_product, dot_product)
+    if angle_rad < 0:
+        angle_rad += 2 * math.pi
+    return angle_rad
