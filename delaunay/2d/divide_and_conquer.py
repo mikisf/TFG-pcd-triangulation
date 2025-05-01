@@ -1,8 +1,10 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))) # Add the parent directory to sys.path
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to sys.path
 import math
 from utils import in_circumcircle, angle
+
 
 def get_neighbors(point, edges):
     neighbors = set()
@@ -10,6 +12,7 @@ def get_neighbors(point, edges):
         if point in edge:
             neighbors.add(edge[0] if edge[1] == point else edge[1])
     return neighbors
+
 
 def delaunay(points):
     points = sorted(set(points))  # Remove duplicates and sort by x, then y
@@ -62,8 +65,8 @@ def delaunay(points):
 
         while True:
             left_candidates = get_neighbors(base[0], left_edges)
-            left_candidates = sorted(left_candidates, key=lambda c: angle(base[1], base[0], c)) # Sort by angle
-            left_candidates = [c for c in left_candidates if angle(base[1], base[0], c) < math.pi] # Remove the left_edges candidates which angle is >= than pi
+            left_candidates = sorted(left_candidates, key=lambda c: angle(base[1], base[0], c))  # Sort by angle
+            left_candidates = [c for c in left_candidates if angle(base[1], base[0], c) < math.pi]  # Remove the left_edges candidates which angle is >= than pi
 
             left_candidate = None
             while left_candidates:
@@ -73,12 +76,12 @@ def delaunay(points):
                 left_candidate_next = left_candidates[0]
                 if not in_circumcircle(left_candidate_next, left_candidate, base[0], base[1]):
                     break
-                else: # Remove the LL-edge
-                    [ edges.remove(edge) for edge in [(base[0], left_candidate), (left_candidate, base[0])] if edge in edges ]
+                else:  # Remove the LL-edge
+                    [edges.remove(edge) for edge in [(base[0], left_candidate), (left_candidate, base[0])] if edge in edges]
 
             right_candidates = get_neighbors(base[1], right_edges)
-            right_candidates = sorted(right_candidates, key=lambda c: angle(c, base[1], base[0])) # Sort by angle
-            right_candidates = [c for c in right_candidates if angle(c, base[1], base[0]) < math.pi] # Remove the right_edges candidates which angle is >= than pi
+            right_candidates = sorted(right_candidates, key=lambda c: angle(c, base[1], base[0]))  # Sort by angle
+            right_candidates = [c for c in right_candidates if angle(c, base[1], base[0]) < math.pi]  # Remove the right_edges candidates which angle is >= than pi
 
             right_candidate = None
             while right_candidates:
@@ -88,9 +91,9 @@ def delaunay(points):
                 right_candidate_next = right_candidates[0]
                 if not in_circumcircle(right_candidate_next, right_candidate, base[0], base[1]):
                     break
-                else: # Remove the RR-edge
-                    [ edges.remove(edge) for edge in [(base[1], right_candidate), (right_candidate, base[1])] if edge in edges ]
-            
+                else:  # Remove the RR-edge
+                    [edges.remove(edge) for edge in [(base[1], right_candidate), (right_candidate, base[1])] if edge in edges]
+
             if left_candidate == None and right_candidate == None:
                 break
 
@@ -106,11 +109,12 @@ def delaunay(points):
             else:
                 base = (left_candidate, base[1])
 
-            edges.append(base) # Add the LR-edge
+            edges.append(base)  # Add the LR-edge
 
         return edges
 
     return build(points)
+
 
 from matplotlib import pyplot as plt
 import random
@@ -128,7 +132,7 @@ if __name__ == "__main__":
         # Divide and conquer Delaunay triangulation
         edges = delaunay(points)
         dac_edges = set(tuple(sorted(edge)) for edge in edges)
-        
+
         # Scipy Delaunay implementation
         tri = Delaunay(points_np)
         scipy_edges = set()
@@ -139,7 +143,7 @@ if __name__ == "__main__":
 
         # Compare results
         print("Edges match:", dac_edges == scipy_edges)
-        
+
         # Plot results
         fig, ax = plt.subplots(1, 2, figsize=(12, 6))
 
@@ -148,17 +152,17 @@ if __name__ == "__main__":
             p1, p2 = edge
             xs = [p1[0], p2[0]]
             ys = [p1[1], p2[1]]
-            ax[0].plot(xs, ys, 'bo-')
+            ax[0].plot(xs, ys, "bo-")
         ax[0].set_title("Divide and Conquer Delaunay Triangulation")
-        ax[0].set_aspect('equal')
+        ax[0].set_aspect("equal")
 
         # Plot scipy Delaunay
         for edge in scipy_edges:
             p1, p2 = edge
             xs = [p1[0], p2[0]]
             ys = [p1[1], p2[1]]
-            ax[1].plot(xs, ys, 'ro-')
+            ax[1].plot(xs, ys, "ro-")
         ax[1].set_title("Scipy Delaunay Triangulation")
-        ax[1].set_aspect('equal')
-        
+        ax[1].set_aspect("equal")
+
         plt.show()

@@ -1,7 +1,9 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))) # Add the parent directory to sys.path
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # Add the parent directory to sys.path
 from utils import plot_triangulation, in_circumcircle
+
 
 def edge_flip(triangles, points):
     """
@@ -13,7 +15,7 @@ def edge_flip(triangles, points):
     edge_to_tri = {}
     for ti, tri in enumerate(triangles):
         for i in range(3):
-            a, b = tri[i], tri[(i+1) % 3]
+            a, b = tri[i], tri[(i + 1) % 3]
             edge = tuple(sorted((a, b)))
             edge_to_tri.setdefault(edge, []).append(ti)
 
@@ -46,6 +48,7 @@ def edge_flip(triangles, points):
                 return new_triangles, True
     return triangles, False
 
+
 def delaunay_triangulation(points, initial_triangles):
     """
     Starting from an initial triangulation, repeatedly apply edge flips until
@@ -57,28 +60,30 @@ def delaunay_triangulation(points, initial_triangles):
         triangles, changed = edge_flip(triangles, points)
     return triangles
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
+    # fmt: off
     points = [
-        (0, 0),    # Point 0
-        (1, 0),    # Point 1
-        (0.9, 1),  # Point 2
-        (0, 1),    # Point 3
-        (0.5, 0.5), # Point 4
-        (1.2, 0.2), # Point 5
-        (-0.3, 0.7), # Point 6
+        (0, 0),       # Point 0
+        (1, 0),       # Point 1
+        (0.9, 1),     # Point 2
+        (0, 1),       # Point 3
+        (0.5, 0.5),   # Point 4
+        (1.2, 0.2),   # Point 5
+        (-0.3, 0.7),  # Point 6
         (0.3, -0.2),  # Point 7
-        (1.5, 1.5),  # Point 8
-        (-0.5, -0.5),  # Point 9
-        (0.8, 0.3),  # Point 10
-        (1.1, 1.2),  # Point 11
+        (1.5, 1.5),   # Point 8
+        (-0.5, -0.5), # Point 9
+        (0.8, 0.3),   # Point 10
+        (1.1, 1.2),   # Point 11
         (-0.6, 1.3),  # Point 12
-        (0.2, 1.1),  # Point 13
+        (0.2, 1.1),   # Point 13
         (1.4, -0.4),  # Point 14
         (-0.4, 0.2),  # Point 15
-        (0.7, 1.4),  # Point 16
-        (-1, -1),    # Point 17
-        (1.8, 0.5),  # Point 18
-        (0.3, 0.8)   # Point 19
+        (0.7, 1.4),   # Point 16
+        (-1, -1),     # Point 17
+        (1.8, 0.5),   # Point 18
+        (0.3, 0.8)    # Point 19
     ]
     
     # An initial triangulation that covers all points (may not be Delaunay)
@@ -87,44 +92,46 @@ if __name__ == '__main__':
         (9, 15, 12),  # Triangle 1
         (15, 6, 12),  # Triangle 2
         (3, 13, 12),  # Triangle 3
-        (12, 13, 16),  # Triangle 4
+        (12, 13, 16), # Triangle 4
         (12, 16, 8),  # Triangle 5
         (16, 11, 8),  # Triangle 6
         (8, 11, 18),  # Triangle 7
-        (13, 11, 16),  # Triangle 8
+        (13, 11, 16), # Triangle 8
         (13, 2, 11),  # Triangle 9
         (2, 18, 11),  # Triangle 10
         (3, 19, 13),  # Triangle 11
         (13, 19, 2),  # Triangle 12
-        (2, 4, 18),  # Triangle 13
-        (1, 5, 10),  # Triangle 14
+        (2, 4, 18),   # Triangle 13
+        (1, 5, 10),   # Triangle 14
         (14, 18, 5),  # Triangle 15
-        (1, 14, 5),  # Triangle 16
+        (1, 14, 5),   # Triangle 16
         (14, 9, 17),  # Triangle 17
-        (7, 9, 14),  # Triangle 18
-        (0, 9, 7),  # Triangle 19
-        (0, 15, 9),  # Triangle 20
-        (0, 6, 15),  # Triangle 21
-        (12, 4, 3),  # Triangle 22
-        (3, 4, 19),  # Triangle 23
-        (6, 10, 4),  # Triangle 24
-        (6, 1, 10),  # Triangle 25
-        (6, 14, 1),  # Triangle 26
-        (0, 7, 14),  # Triangle 27
+        (7, 9, 14),   # Triangle 18
+        (0, 9, 7),    # Triangle 19
+        (0, 15, 9),   # Triangle 20
+        (0, 6, 15),   # Triangle 21
+        (12, 4, 3),   # Triangle 22
+        (3, 4, 19),   # Triangle 23
+        (6, 10, 4),   # Triangle 24
+        (6, 1, 10),   # Triangle 25
+        (6, 14, 1),   # Triangle 26
+        (0, 7, 14),   # Triangle 27
         (10, 5, 18),  # Triangle 28
-        (6, 0, 14),  # Triangle 29
+        (6, 0, 14),   # Triangle 29
         (4, 10, 18),  # Triangle 30
-        (4, 2, 19),  # Triangle 31
-        (6, 4, 12),  # Triangle 32
+        (4, 2, 19),   # Triangle 31
+        (6, 4, 12),   # Triangle 32
     ]
+    # fmt: on
 
     plot_triangulation(points, initial_triangles, title="Initial Triangulation")
-    
+
     final_triangles = delaunay_triangulation(points, initial_triangles)
     plot_triangulation(points, final_triangles, title="Algorithm Delaunay Triangulation")
-    
+
     from scipy.spatial import Delaunay
     import numpy as np
+
     points_np = np.array(points)
     scipy_delaunay = Delaunay(points_np)
     scipy_triangles = [tuple(sorted(tri)) for tri in scipy_delaunay.simplices]
@@ -135,5 +142,3 @@ if __name__ == '__main__':
     print("Final triangles:", final_triangles)
     print("Scipy triangles:", scipy_triangles)
     print("Triangles match:", final_triangles == scipy_triangles)
-    
-    
