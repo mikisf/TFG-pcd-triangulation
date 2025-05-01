@@ -8,9 +8,8 @@ def delaunay_triangulation(points):
     Compute the Delaunay triangulation for a set of points (list of (x, y) tuples)
     using the Bowyer-Watson algorithm. Triangles are represented as tuples of indices.
     
-    Returns a tuple (triangles, original_points) where:
-      - triangles: list of triangles (each a tuple of indices referring to original_points)
-      - original_points: the input list of points.
+    Returns:
+        - triangles: list of triangles (each a tuple of indices referring to original_points)
     """
     original_points = points.copy()  # Keep the original list for output
     pts = points.copy()  # Work on a copy so we can add super-triangle vertices
@@ -32,7 +31,7 @@ def delaunay_triangulation(points):
     triangulation = [(super_idx1, super_idx2, super_idx3)]
     
     # Step 2: Add each point (by index) from the original points.
-    # Note: indices for original points remain 0 .. len(original_points)-1.
+    # Note: indices for original points remain 0 ... len(original_points)-1.
     for idx, point in enumerate(original_points):
         bad_triangles = []
         # Find all triangles whose circumcircles contain the point.
