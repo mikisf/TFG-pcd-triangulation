@@ -45,28 +45,19 @@ def angle(A, B, C):
     return angle_rad
 
 
-def in_circumsphere(point, a, b, c, d):
+def in_circumsphere(p, p1, p2, p3, p4):
     """
-    Check if the point is inside the circumsphere of the tetrahedron defined by points a, b, c, d.
+    Determines if point `p` is inside the circumsphere of the tetrahedron (p1, p2, p3, p4).
+    Returns True if inside, False otherwise.
     """
-    a, b, c, d = map(np.array, (a, b, c, d))
-    A = 2 * np.array(
-        [
-            b - a,
-            c - a,
-            d - a,
-        ]
-    )
-    b = np.array(
-        [
-            np.dot(b, b) - np.dot(a, a),
-            np.dot(c, c) - np.dot(a, a),
-            np.dot(d, d) - np.dot(a, a),
-        ]
-    )
-    center = np.linalg.solve(A, b)
-    radius_squared = np.dot(center - a, center - a)
-    return np.dot(point - center, point - center) < radius_squared
+
+    def to_homogeneous(q):
+        return [q[0], q[1], q[2], np.dot(q, q), 1.0]
+
+    M = np.array([to_homogeneous(p1), to_homogeneous(p2), to_homogeneous(p3), to_homogeneous(p4), to_homogeneous(p)])
+    orient = np.linalg.det(M[:4, [0, 1, 2, 4]])  # determinant of orientation of tetrahedron
+    det = np.linalg.det(M)
+    return det * orient > 0
 
 
 def plot_triangulation(points, triangles, title="Delaunay Triangulation"):
