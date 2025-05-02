@@ -98,7 +98,10 @@ if __name__ == "__main__":
     seed = random.randint(0, 500)
     random.seed(seed)
     print("Seed:", seed)
-    points = [(random.random(), random.random(), random.random()) for _ in range(20)]
+    points = [(random.random(), random.random(), random.random()) for _ in range(4)]
+    print("Points:", points)
+    points = [(0.0, 5.75, 0.0), (0.0, 5.362, 0.0), (-0.9311015, 5.280539, 0.0), (-0.99847704, 5.6626444, 0.0)]
+    print("Points:", points)
 
     delaunay_tetrahedra = delaunay_tetrahedralization(points)
 
