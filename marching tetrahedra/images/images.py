@@ -57,12 +57,12 @@ if __name__ == "__main__":
         ax.set_zlabel("Z")
 
         ax.view_init(elev=20, azim=75)
-        plt.axis('off')
-        plt.xlim(-0., 1.)
-        plt.ylim(-0., 1.)
-        ax.set_zlim(-0., 1.)
+        plt.axis("off")
+        plt.xlim(-0.0, 1.0)
+        plt.ylim(-0.0, 1.0)
+        ax.set_zlim(-0.0, 1.0)
         plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
         plt.savefig(f"marching tetrahedra/images/MT{i}.png")
         plt.close()
-        #plt.show()
+        # plt.show()
