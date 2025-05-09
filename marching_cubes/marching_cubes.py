@@ -1,5 +1,9 @@
-import numpy as np
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))  # Add the parent directory to sys.path
 from edgeTable import edgeTable
+
+import numpy as np
 from triTable import triTable
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
