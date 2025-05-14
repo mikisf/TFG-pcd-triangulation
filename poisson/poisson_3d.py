@@ -79,10 +79,20 @@ def solve_poisson(div):
 
 
 def poisson_3d(points, normals, grid_size):
+    # Normalize
+    min_coords = points.min(axis=0)
+    max_coords = points.max(axis=0)
+    points = (points - min_coords) / (max_coords - min_coords) * 0.9 + 0.05
+
     Vx, Vy, Vz = create_vector_field(points, normals, grid_size)
     div = compute_divergence(Vx, Vy, Vz)
     chi = solve_poisson(div)
     verts, faces, _, _ = marching_cubes(chi, level=0.5)
+
+    # Denormalize vertices
+    verts = verts / grid_size  # verts are in voxel units, convert to [0,1] range
+    verts = (verts - 0.05) / 0.9  # invert [0.05, 0.95] scaling
+    verts = verts * (max_coords - min_coords) + min_coords  # back to original space
 
     for face in faces:
         face[0], face[2] = face[2], face[0]  # flip the face orientation so that the normals point outwards
@@ -104,7 +114,6 @@ if __name__ == "__main__":
 
     pcd = o3d.io.read_point_cloud("poisson/data/stanford-bunny.ply")
     points = np.asarray(pcd.points)
-    points = (points - points.min(axis=0)) / (points.max(axis=0) - points.min(axis=0)) * 0.9 + 0.05
     normals = -np.asarray(pcd.normals)  # inward normals
 
     verts, faces = poisson_3d(points, normals, grid_size=32)
