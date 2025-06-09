@@ -122,17 +122,13 @@ def create_obj(vertices, faces, file_path):
 
 
 if __name__ == "__main__":
-
     import pyvista as pv
 
-    multiblock = pv.read("marching tetrahedra/data/disk_out_ref.ex2")
+    multiblock = pv.read("marching_tetrahedra/data/disk_out_ref.ex2")
     mesh = multiblock["Element Blocks"][0]
     points = mesh.points
     points = [tuple(point) for point in points]
     scalars = mesh["Temp"]
-
-    points.append((0, 0, 0))  # Dataset misses points in between
-    scalars = np.append(scalars, 0)
 
     # Compute the Delaunay tetrahedralization
     from scipy.spatial import Delaunay
@@ -140,12 +136,7 @@ if __name__ == "__main__":
     scipy_delaunay = Delaunay(points)
     tetrahedra = [tuple(sorted(tetra)) for tetra in scipy_delaunay.simplices]
 
-    # Remove all Tetrahedra that contain the last point
-    tetrahedra = [tetra for tetra in tetrahedra if len(points) - 1 not in tetra]
-    points = points[:-1]
-    scalars = scalars[:-1]
-
     threshold = 450
     vertices, faces = marching_tetrahedra(points, tetrahedra, scalars, threshold)
 
-    create_obj(vertices, faces, "marching tetrahedra/data/isosurface.obj")
+    create_obj(vertices, faces, "marching_tetrahedra/data/isosurface.obj")

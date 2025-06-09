@@ -1,7 +1,5 @@
 import os
 import numpy as np
-from marching_cubes import marching_cubes
-from create_obj import create_obj
 import re
 
 
@@ -56,23 +54,3 @@ end_header
         ply_file.write("\n".join(vertex_list))
 
     print(f"PLY file saved to {ply_path}")
-
-
-if __name__ == "__main__":
-    # Configuration
-    slice_folder = "D:/Github Projects/TFG-pcd-triangulation/marching cubes/data/bunny"  # Replace with the path to the folder containing 113 binary slice files
-    resultion = (512, 512)
-
-    aspect_ratio = (1, 1, 1)  # Aspect ratio of the voxel grid
-    threshold = 0.5  # Adjust threshold based on intensity for the surface
-
-    voxel_grid = read_slices(slice_folder, resultion)
-
-    # voxel_grid_to_ply(voxel_grid, threshold, "output2.ply")
-
-    vertices, faces = marching_cubes(voxel_grid, threshold)
-
-    aspect_matrix = np.diag(aspect_ratio)
-    vertices = vertices @ aspect_matrix
-
-    create_obj(vertices, faces, "marching cubes/data/Bunny050.obj")
