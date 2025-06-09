@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def create_obj(vertices, faces, file_path):
     """
     Creates a .obj file from vertices, faces, and calculated normals.

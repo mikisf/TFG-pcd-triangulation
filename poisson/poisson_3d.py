@@ -101,15 +101,6 @@ def poisson_3d(points, normals, grid_size):
 
 
 if __name__ == "__main__":
-    points, normals = generate_sphere_points(10000)
-    """
-    import open3d as o3d
-    pcd = o3d.geometry.PointCloud()
-    pcd.points = o3d.utility.Vector3dVector(points)
-    pcd.normals = o3d.utility.Vector3dVector(normals)
-    o3d.io.write_point_cloud("sphere_points.ply", pcd)
-    print("Saved point cloud to sphere_points.ply")
-    """
     import open3d as o3d
 
     pcd = o3d.io.read_point_cloud("poisson/data/stanford-bunny.ply")
